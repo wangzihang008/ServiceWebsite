@@ -4,104 +4,105 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
+import static org.mockito.Mockito.*;
+
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import com.fdmgroup.Entity.Customer;
-import com.fdmgroup.Entity.Dao.CustomerDao;
+import com.fdmgroup.Entity.Vendor;
 
-import static org.mockito.Mockito.*;
-
-public class CustomerDaoTest {
+public class VendorDaoTest {
 	@Test
-	public void Given_CustomerDao_When_getCustomer_returnCustomerAndCleansUpResources() {
+	public void Given_VendorDao_When_getVendor_returnVendorAndCleansUpResources() {
 		EntityManagerFactory EMF = mock(EntityManagerFactory.class);
 		EntityManager EM = mock(EntityManager.class);
-		CustomerDao customerDao = new CustomerDao(EMF);
 		
 		when(EMF.createEntityManager()).thenReturn(EM);
 		
-		customerDao.get(123);
+		VendorDao vendorDao = new VendorDao(EMF);
+		vendorDao.get(123);
 		
 		InOrder order = inOrder(EMF, EM);
 		order.verify(EMF).createEntityManager();
-		order.verify(EM).find(Customer.class, 123);
+		order.verify(EM).find(Vendor.class, 123);
 		order.verify(EM).close();
-		
 	}
 	
 	@Test
-	public void Given_CustomerDao_When_addCustomer_CleansUpReources() {
+	public void Given_VendorDao_When_addVendor_CleansUpResources() {
 		EntityManagerFactory EMF = mock(EntityManagerFactory.class);
 		EntityManager EM = mock(EntityManager.class);
 		EntityTransaction ET = mock(EntityTransaction.class);
-		Customer customer = mock(Customer.class);
+		Vendor vendor = mock(Vendor.class);
 		
 		when(EMF.createEntityManager()).thenReturn(EM);
 		when(EM.getTransaction()).thenReturn(ET);
 		
-		CustomerDao customerDao = new CustomerDao(EMF);
-		customerDao.add(customer);
+		VendorDao vendorDao = new VendorDao(EMF);
+		vendorDao.add(vendor);
 		
 		InOrder order = inOrder(EMF, EM, ET);
 		order.verify(EMF).createEntityManager();
 		order.verify(EM).getTransaction();
 		order.verify(ET).begin();
-		order.verify(EM).persist(customer);
+		order.verify(EM).persist(vendor);
 		order.verify(ET).commit();
 		order.verify(EM).close();
 	}
 	
 	@Test
-	public void Given_CustomerDao_When_updateCustomer_CleansUpResources() {
+	public void Given_VendorDao_When_updateVendor_CleansUpResources() {
 		EntityManagerFactory EMF = mock(EntityManagerFactory.class);
 		EntityManager EM = mock(EntityManager.class);
 		EntityTransaction ET = mock(EntityTransaction.class);
-		Customer customer = mock(Customer.class);
+		Vendor vendor = mock(Vendor.class);
+//		Vendor oldVendor = mock(Vendor.class);
 		
 		when(EMF.createEntityManager()).thenReturn(EM);
 		when(EM.getTransaction()).thenReturn(ET);
-		when(EM.find(Customer.class, 123)).thenReturn(customer);
+		when(EM.find(Vendor.class, 123)).thenReturn(vendor);
 		
-		CustomerDao customerDao = new CustomerDao(EMF);
-		customerDao.update(123, customer);
+		VendorDao vendorDao = new VendorDao(EMF);
+		vendorDao.update(123, vendor);
 		
-		InOrder order = inOrder(EMF, EM, ET, customer);
+		InOrder order = inOrder(EMF, EM, ET, vendor);
 		order.verify(EMF).createEntityManager();
 		order.verify(EM).getTransaction();
 		order.verify(ET).begin();
-		order.verify(EM).find(Customer.class, 123);
-		order.verify(customer).setEmail(customer.getEmail());
-		order.verify(customer).setUsername(customer.getUsername());
-		order.verify(customer).setPassword(customer.getPassword());
-		order.verify(customer).setStatus(customer.getStatus());
-		order.verify(customer).setLast_updated_time(customer.getLast_updated_time());
-		order.verify(customer).setLast_log_date_time(customer.getLast_log_date_time());
-		order.verify(customer).setCreate_date_time(customer.getCreate_date_time());
+		order.verify(vendor).setAddress(vendor.getAddress());
+		order.verify(vendor).setPhone_number(vendor.getPhone_number());
+		order.verify(vendor).setStatus(vendor.getStatus());
+		order.verify(vendor).setVerification(vendor.getVerification());
+		order.verify(vendor).setStore_name(vendor.getStore_name());
+		order.verify(vendor).setStore_url(vendor.getStore_url());
+		order.verify(vendor).setVendor_first_name(vendor.getVendor_first_name());
+		order.verify(vendor).setVendor_last_name(vendor.getVendor_last_name());
+		order.verify(vendor).setVendor_middle_name(vendor.getVendor_middle_name());
+		order.verify(vendor).setCustomer(vendor.getCustomer());
 		order.verify(ET).commit();
 		order.verify(EM).close();
 	}
 	
 	@Test
-	public void Given_CustomerDao_When_deleteCustomer_CleansUpReources() {
+	public void Given_VendorDao_When_deleteVendor_CleansUpResources() {
 		EntityManagerFactory EMF = mock(EntityManagerFactory.class);
 		EntityManager EM = mock(EntityManager.class);
 		EntityTransaction ET = mock(EntityTransaction.class);
-		Customer customer = mock(Customer.class);
+		Vendor vendor = mock(Vendor.class);
 		
 		when(EMF.createEntityManager()).thenReturn(EM);
 		when(EM.getTransaction()).thenReturn(ET);
-		when(EM.find(Customer.class, 123)).thenReturn(customer);
+		when(EM.find(Vendor.class, 123)).thenReturn(vendor);
 		
-		CustomerDao customerDao = new CustomerDao(EMF);
-		customerDao.delete(123);
+		VendorDao vendorDao = new VendorDao(EMF);
+		vendorDao.delete(123);
 		
 		InOrder order = inOrder(EMF, EM, ET);
 		order.verify(EMF).createEntityManager();
 		order.verify(EM).getTransaction();
 		order.verify(ET).begin();
-		order.verify(EM).find(Customer.class, 123);
-		order.verify(EM).remove(customer);
+		order.verify(EM).find(Vendor.class, 123);
+		order.verify(EM).remove(vendor);
 		order.verify(ET).commit();
 		order.verify(EM).close();
 	}

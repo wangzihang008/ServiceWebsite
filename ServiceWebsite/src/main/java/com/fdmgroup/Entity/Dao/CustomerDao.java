@@ -55,11 +55,14 @@ public class CustomerDao {
 		old.setLast_updated_time(customer.getLast_updated_time());
 		old.setLast_log_date_time(customer.getLast_log_date_time());
 		old.setCreate_date_time(customer.getCreate_date_time());
-		old.setVendor_id(customer.getVendor_id());
 		et.commit();
 		em.close();
 	}
 
+	/**
+	 * delete record by id
+	 * @param id
+	 */
 	public void delete(int id) {
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction et = em.getTransaction();
