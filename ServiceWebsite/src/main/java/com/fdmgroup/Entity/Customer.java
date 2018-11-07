@@ -4,34 +4,51 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "service_website_customer")
 public class Customer {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@TableGenerator(name = "customer_gen", 
+		table = "customer",
+		allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, 
+		generator = "customer_gen")
 	private long customer_id;
+	@Column(unique=true)
 	private String username;
 	private String password;
+	@Column(unique=true)
 	private String email;
 	private String status;
 	private Calendar create_date_time;
 	private Calendar last_log_date_time;
 	private Calendar last_updated_time;
+	
 	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "vendor_id")
 	private Vendor vendor;
 	
+	@ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "customer_favourite_vendor", 
+    	joinColumns = @JoinColumn(name = "customer_id", referencedColumnName = "customer_id"), 
+    	inverseJoinColumns = @JoinColumn(name = "vendor_id", referencedColumnName = "vendor_id"))
 	private List<Vendor> favouriteVendors;
+	
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	private List<Order> orders;
 	
 	public Customer() {
 		super();
@@ -85,10 +102,6 @@ public class Customer {
 	public void setLast_updated_time(Calendar last_updated_time) {
 		this.last_updated_time = last_updated_time;
 	}
-	@ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "customer_favourite_vendor", 
-    	joinColumns = @JoinColumn(name = "customer_id", referencedColumnName = "customer_id"), 
-    	inverseJoinColumns = @JoinColumn(name = "vendor_id", referencedColumnName = "vendor_id"))
 	public List<Vendor> getFavouriteVendors() {
 		return favouriteVendors;
 	}
@@ -102,8 +115,6 @@ public class Customer {
 		this.vendor = vendor;
 	}
 	
-	
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -114,6 +125,7 @@ public class Customer {
 		result = prime * result + ((favouriteVendors == null) ? 0 : favouriteVendors.hashCode());
 		result = prime * result + ((last_log_date_time == null) ? 0 : last_log_date_time.hashCode());
 		result = prime * result + ((last_updated_time == null) ? 0 : last_updated_time.hashCode());
+		result = prime * result + ((orders == null) ? 0 : orders.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
@@ -156,6 +168,11 @@ public class Customer {
 			if (other.last_updated_time != null)
 				return false;
 		} else if (!last_updated_time.equals(other.last_updated_time))
+			return false;
+		if (orders == null) {
+			if (other.orders != null)
+				return false;
+		} else if (!orders.equals(other.orders))
 			return false;
 		if (password == null) {
 			if (other.password != null)

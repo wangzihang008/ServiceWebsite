@@ -1,15 +1,22 @@
 package com.fdmgroup.Entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.TableGenerator;
 
 @Entity
 public class Vendor {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@TableGenerator(name = "vendor_gen", 
+		table = "vendor",
+		allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, 
+		generator = "vendor_gen")
 	private int vendor_id;
 	private int verification;
 	private String address;
@@ -19,8 +26,9 @@ public class Vendor {
 	private String vendor_middle_name;
 	private String vendor_last_name;
 	private String store_name;
+	@Column(unique = true, nullable = false)
 	private String store_url;
-	@OneToOne(mappedBy = "vendor")
+	@OneToOne(mappedBy = "vendor", fetch = FetchType.EAGER)
     private Customer customer;
 	
 	public Vendor() {
