@@ -14,7 +14,7 @@ public class Dao {
 		this.emf = emf;
 	}
 
-	public <T> List<T> excuteQuery(Object object, String query) {
+	public List excuteQuery(Object object, String query) {
 		EntityManager em = emf.createEntityManager();
 		Query q = em.createQuery(query, object.getClass());
 		List resultList = q.getResultList();
