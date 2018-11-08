@@ -52,5 +52,10 @@
 			<artifactId>c3p0</artifactId>
 			<version>0.9.1</version>
 		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.11</version>
+		</dependency>
 	</dependencies>
 </project>

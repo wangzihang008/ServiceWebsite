@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+
+import com.fdmgroup.Entity.Administrator;
 
 public class AdministratorDao {
 
@@ -25,5 +28,13 @@ public class AdministratorDao {
 		
 	}
 	
+	public void add(Administrator administrator) {
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction et = em.getTransaction();
+		et.begin();
+		em.persist(administrator);
+		et.commit();
+		em.close();
+	}
 }
  
